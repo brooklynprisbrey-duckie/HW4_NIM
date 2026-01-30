@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <ctime>
 
 using namespace std;
 
@@ -39,7 +40,8 @@ int computerMove(int stones) {//computer will let you win
         cout << "The computer took " << stones - 1 << " stones." << endl;
         return stones - 1; }
     else {
-        default_random_engine seed;
+        srand(time(0));
+        default_random_engine seed(rand());
         uniform_int_distribution<int> stoneTake(1, 3);
         int stoneTook;
         stoneTook = stoneTake(seed);
@@ -53,15 +55,22 @@ bool checkWin(int stones) {
 }
 
 int main() {
-    int stonePile = 16;
+        int stonePile = 16;
 
-    while (checkWin(stonePile)) {
-        cout << "There are " << stonePile << " stones in the pile." << endl;
-        stonePile -= getUserMove(stonePile);
-        cout << "There are " << stonePile << " stones in the pile." << endl;
-        if (!checkWin(stonePile)) { continue; }
-        stonePile -= computerMove(stonePile);
-    } 
-
+        while (checkWin(stonePile)) {
+            cout << "There are " << stonePile << " stones in the pile." << endl;
+            stonePile -= getUserMove(stonePile);
+            cout << "There are " << stonePile << " stones in the pile." << endl;
+            if (!checkWin(stonePile)) { 
+                cout << "You got the last stone and won! Congratulations!" << endl << endl;
+                continue;
+            }
+            stonePile -= computerMove(stonePile);
+            if (!checkWin(stonePile)) {
+                cout << "The computer got the last stone! Even though it was trying to let you win!" << endl <<
+                    "...Does that mean this is also a victory for you?" << endl << endl;
+                continue;
+            }
+        }
     return 0;
 }
